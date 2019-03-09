@@ -1,0 +1,29 @@
+{
+  "name": "@kothique/moleculer-rethinkdbdash",
+  "version": "1.0.0",
+  "description": "Moleculer service ensuring dbs, tables, and indices, and giving access to the driver.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kothique/moleculer-rethinkdbdash.git"
+  },
+  "keywords": [
+    "moleculer",
+    "rethinkdb",
+    "rethinkdbdash",
+    "mixin"
+  ],
+  "author": "Kothique Félixx <kothique@protonmail.ch>",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/kothique/moleculer-rethinkdbdash/issues"
+  },
+  "homepage": "https://github.com/kothique/moleculer-rethinkdbdash#readme",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "rethinkdbdash": "^2.3.31"
+  }
+}
