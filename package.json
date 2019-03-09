@@ -1,7 +1,7 @@
 {
   "name": "@kothique/moleculer-rethinkdbdash",
   "version": "0.1.0",
-  "description": "Moleculer service ensuring dbs, tables, and indices, and giving access to the driver.",
+  "description": "Moleculer service ensuring specified dbs, tables, and indices exist, and giving access to the driver.",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -29,6 +29,6 @@
     "rethinkdbdash": "^2.3.31"
   },
   "engines": {
-    "node": ">=6.x.x"
+    "node": ">=8.x.x"
   }
 }

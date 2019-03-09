@@ -35,7 +35,7 @@ module.exports = {
 
         if (!dbNames.includes(dbName)) {
           await this.r.dbCreate(dbName);
-          this.logger.debug(`Created DB: '${dbName}.`);
+          this.logger.debug(`Created DB: '${dbName}'.`);
         }
 
         if (dbInitial !== true && !_.isObject(dbInitial)) {
