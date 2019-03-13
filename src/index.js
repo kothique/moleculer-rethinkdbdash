@@ -15,9 +15,13 @@ module.exports = {
   async created() {
     this.r = r({
       silent: true,
+      /* All logs are automatically forwarded to the service logger.
+         This can be easily overrided. */
       log: message => this.logger.debug(message),
       ...this.schema.rOptions
     });
+
+    const createdIndices = {};
 
     if (this.schema.rInitial) {
       if (!_.isFunction(this.schema.rInitial) && !_.isObject(this.schema.rInitial)) {
@@ -32,6 +36,7 @@ module.exports = {
       const dbNames = await this.r.dbList();
       await Promise.all(Object.keys(rInitial).map(async dbName => {
         const dbInitial = rInitial[dbName];
+        createdIndices[dbName] = {};
 
         if (!dbNames.includes(dbName)) {
           await this.r.dbCreate(dbName);
@@ -49,6 +54,7 @@ module.exports = {
           if (tableName.startsWith('$')) { return; }
 
           const tableInitial = dbInitial[tableName];
+          createdIndices[dbName][tableName] = [];
 
           if (tableInitial !== true && !_.isObject(tableInitial)) {
             throw new MoleculerClientError(`Expected this.rInitial.${dbName}.${tableName} to be true or an object.`, null, 'ERR_INVALID_TABLE_INITIAL');
@@ -83,6 +89,7 @@ module.exports = {
                 ...indexInitial.$function ? [indexInitial.$function] : [],
                 ...indexInitial.$options ? [indexInitial.$options] : []
               );
+              createdIndices[dbName][tableName].push(indexName);
               this.logger.debug(`Created index: ${dbName}.${tableName}.${indexName}`, {
                 options: indexInitial.$options
               });
@@ -93,6 +100,12 @@ module.exports = {
     }
 
     if (_.isFunction(this.schema.rOnReady)) {
+      /* Wait for indices to be created. */
+      await Promise.all(Object.keys(createdIndices).map(dbName =>
+        Promise.all(Object.keys(createdIndices[dbName]).map(tableName =>
+          this.r.db(dbName).table(tableName).indexWait(...createdIndices[dbName][tableName])
+        ))
+      ));
       this.schema.rOnReady.call(this);
     }
   }

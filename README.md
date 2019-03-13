@@ -62,7 +62,7 @@ broker.createService({
       ...
       */
     }),
-    /* Called when DB is ready for use. */
+    /* Called when all dbs, tables, and indices are created. */
     async rOnReady() {
       const usersByAge = await this.rTable.orderBy(this.r.desc('age'));
       const changesCursor = await this.r.db('boom').table('meow').changes();
