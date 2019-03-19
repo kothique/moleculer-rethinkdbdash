@@ -39,8 +39,14 @@ module.exports = {
         createdIndices[dbName] = {};
 
         if (!dbNames.includes(dbName)) {
-          await this.r.dbCreate(dbName);
-          this.logger.debug(`Created DB: '${dbName}'.`);
+          try {
+            await this.r.dbCreate(dbName);
+            this.logger.debug(`Created DB: '${dbName}'.`);
+          } catch (error) {
+            if (error.name !== 'ReqlOpFailedError') {
+              throw error;
+            }
+          }
         }
 
         if (dbInitial !== true && !_.isObject(dbInitial)) {
@@ -61,10 +67,16 @@ module.exports = {
           }
 
           if (!tableNames.includes(tableName)) {
-            await this.r.db(dbName).tableCreate(tableName, tableInitial.$options);
-            this.logger.debug(`Created${tableInitial.$default ? ' default' : ''} table: ${dbName}.${tableName}`, {
-              options: tableInitial.$options
-            });
+            try {
+              await this.r.db(dbName).tableCreate(tableName, tableInitial.$options);
+              this.logger.debug(`Created${tableInitial.$default ? ' default' : ''} table: ${dbName}.${tableName}`, {
+                options: tableInitial.$options
+              });
+            } catch (error) {
+              if (error.name !== 'ReqlOpFailedError') {
+                throw error;
+              }
+            }
           }
 
           if (tableInitial.$default === true) {
@@ -84,15 +96,21 @@ module.exports = {
             }
 
             if (!indexNames.includes(indexName)) {
-              await this.r.db(dbName).table(tableName).indexCreate(
-                indexName,
-                ...indexInitial.$function ? [indexInitial.$function] : [],
-                ...indexInitial.$options ? [indexInitial.$options] : []
-              );
-              createdIndices[dbName][tableName].push(indexName);
-              this.logger.debug(`Created index: ${dbName}.${tableName}.${indexName}`, {
-                options: indexInitial.$options
-              });
+              try {
+                await this.r.db(dbName).table(tableName).indexCreate(
+                  indexName,
+                  ...indexInitial.$function ? [indexInitial.$function] : [],
+                  ...indexInitial.$options ? [indexInitial.$options] : []
+                );
+                createdIndices[dbName][tableName].push(indexName);
+                this.logger.debug(`Created index: ${dbName}.${tableName}.${indexName}`, {
+                  options: indexInitial.$options
+                });
+              } catch (error) {
+                if (error.name !== 'ReqlOpFailedError') {
+                  throw error;
+                }
+              }
             }
           }));
         }));

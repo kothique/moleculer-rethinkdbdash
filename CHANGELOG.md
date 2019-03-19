@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Ignore '${something} already exists' error. This may happen if rInitial's of two or more services intersect.
+
 ## 1.0.0
 
 - Wait for the indices to be created before calling rOnReady.

@@ -1,6 +1,6 @@
 {
   "name": "@kothique/moleculer-rethinkdbdash",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Moleculer service ensuring specified dbs, tables, and indices exist, and giving access to the driver.",
   "main": "src/index.js",
   "scripts": {
